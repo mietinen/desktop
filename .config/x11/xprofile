@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# QT Stuff
+export QT_QPA_PLATFORMTHEME="gtk2"
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
+
+# JRE stuff
+JDK_JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on'
+JDK_JAVA_OPTIONS+=' -Dswing.aatext=true'
+JDK_JAVA_OPTIONS+=' -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+export JDK_JAVA_OPTIONS
+
+# ~/ Clean-up
+export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc"
+export ATOM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/atom"
+
+# Load Xresources
+command -v loadxrdb >/dev/null && loadxrdb &
+
+# Syncthing daemon
+command -v syncthing >/dev/null && ! pgrep -u "$(whoami)" syncthing >/dev/null && \
+    syncthing -no-browser -home="${XDG_CONFIG_HOME:-$HOME/.config}/syncthing" &
+
+# GIO automount
+command -v gioautomount >/dev/null && gioautomount &
+
+# Run if tiling WM
+if [[ "$DESKTOP_SESSION" =~ awesome|i3|dwm ]]; then
+    # lxsession, polkit
+    command -v lxsession >/dev/null && lxsession --noautostart &
+    # Gnome-keyring
+    command -v gnome-keyring-daemon >/dev/null && eval $(gnome-keyring-daemon --start) && export SSH_AUTH_SOCK
+    # Composite manager
+    command -v picom >/dev/null && picom &
+    # Wallpaper
+    command -v nitrogen >/dev/null && nitrogen --restore &
+    # Screen lock
+    xset s 600 60 dpms 900 1050 1200 &
+    # xss-lock -n dim-screen.sh -- i3lock -c 000000 -n &
+    light-locker --no-late-locking --lock-on-suspend --lock-on-lid --idle-hint &
+fi
+
+# vim: set ts=4 sw=4 tw=0 et :

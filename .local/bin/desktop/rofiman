@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+chosen=$(man -k . | awk '{ print $1 }' | rofirun -dmenu -sort -p "Select man page")
+
+# Exit if none chosen.
+[ -z "$chosen" ] && exit
+
+tempfile=$(mktemp)
+man -Tpdf $chosen | cat - > "$tempfile"
+mupdf "$tempfile"
+rm -f "$tempfile"

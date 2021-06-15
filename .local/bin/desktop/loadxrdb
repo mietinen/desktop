@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+# Exit if xrdb not found
+command -v xrdb >/dev/null || exit
+
+# Load Xresources
+xresources="${XDG_CONFIG_HOME:-$HOME/.config}/x11/Xresources"
+xrdbactive="$(readlink -f "${XDG_CONFIG_HOME:-$HOME/.config}/xrdbthemes/.active")"
+test -f "$xresources" && xrdb "$xresources"
+test -f "$xrdbactive" && xrdb -merge "$xrdbactive"
+
+# Refresh window managers
+sleep 0.5
+awesome-client 'awesome.restart()' >/dev/null 2>&1

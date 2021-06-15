@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+test -f "${XDG_CONFIG_HOME:-$HOME/.config}/xrdbthemes/.active" && \
+    current="$(basename "$(readlink -f "${XDG_CONFIG_HOME:-$HOME/.config}/xrdbthemes/.active")")" || \
+    current="Xresources"
+
+themes=(Xresources)
+while IFS='' read -r line; do themes+=("$line"); done < <(ls "${XDG_CONFIG_HOME:-$HOME/.config}/xrdbthemes")
+
+chosen="$(printf "%s\n" "${themes[@]}" | rofirun -dmenu -p "Xresources theme ($current)")"
+[ "$chosen" = "" ] && exit
+
+path="${XDG_CONFIG_HOME:-$HOME/.config}/xrdbthemes/$chosen"
+if [ -f "$path" ]; then
+    ln -sf "$path" "${XDG_CONFIG_HOME:-$HOME/.config}/xrdbthemes/.active"
+else
+    rm -f "${XDG_CONFIG_HOME:-$HOME/.config}/xrdbthemes/.active"
+fi
+
+loadxrdb
+sleep 1
+notify-send "Changed xrdb theme to: $chosen" &
+
+# vim: set ts=4 sw=4 tw=0 et :

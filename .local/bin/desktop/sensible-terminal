@@ -1,0 +1,7 @@
+#!/bin/sh
+# based on i3-sensible-terminal
+for terminal in "$TERMINAL" urxvt xterm st terminator xfce4-terminal gnome-terminal termit termite lxterminal mate-terminal terminology qterminal lilyterm tilix terminix konsole kitty guake tilda alacritty hyper; do
+    if command -v "$terminal" > /dev/null 2>&1; then
+        exec "$terminal" "$@"
+    fi
+done

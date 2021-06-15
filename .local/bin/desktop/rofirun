@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+case "$*" in
+    *-password*) passoptions="-no-fixed-num-lines" ;;
+    *) passoptions="-no-custom -lines 30" ;;
+esac
+
+exec rofi -font "monospace 11" $passoptions -width -80 -theme-str 'entry { placeholder: ""; }' \
+-color-normal "$(getxrdb background),$(getxrdb foreground),$(getxrdb background),$(getxrdb bgbright),$(getxrdb color10)" \
+-color-urgent "$(getxrdb background),$(getxrdb color1),$(getxrdb background),$(getxrdb bgbright),$(getxrdb color2)" \
+-color-active "$(getxrdb background),$(getxrdb color3),$(getxrdb background),$(getxrdb bgbright),$(getxrdb color2)" \
+-color-window "$(getxrdb background),$(getxrdb color12),$(getxrdb color12)" -i "$@"
+
+# vim: set ts=4 sw=4 tw=0 et :

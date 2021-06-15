@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+
+# Get wm colors from Xresources using appres
+xrdb_get () {
+    output="$(appres wm 2>/dev/null | grep "$1:" | head -n1 | cut -f2)"
+    default="$2"
+    printf "%s" "${output:-$default}"
+}
+brighten () {
+    r=$(printf "%X" $((0x${1:1:2} + 0x$2)))
+    test ${#r} -gt 2 && r="FF"
+    g=$(printf "%X" $((0x${1:3:2} + 0x$2)))
+    test ${#g} -gt 2 && g="FF"
+    b=$(printf "%X" $((0x${1:5:2} + 0x$2)))
+    test ${#b} -gt 2 && b="FF"
+    printf "#%s%s%s" $r $g $b
+}
+case $1 in
+    background)     xrdb_get "background" "#000000" ;;
+    bgbright)       brighten "$(xrdb_get "background" "#000000")" 17 ;;
+    foreground)     xrdb_get "foreground" "#FFFFFF" ;;
+    cursorcolor)    xrdb_get "cursorColor" "#CCCCC" ;;
+    #black
+    color0)         xrdb_get "color0" "#000000" ;;
+    color8)         xrdb_get "color8" "#555555" ;;
+    #red
+    color1)         xrdb_get "color1" "#aa0000" ;;
+    color9)         xrdb_get "color9" "#FF5555" ;;
+    #green
+    color2)         xrdb_get "color2" "#00AA00" ;;
+    color10)        xrdb_get "color10" "#55FF55" ;;
+    #yellow
+    color3)         xrdb_get "color3" "#AA5500" ;;
+    color11)        xrdb_get "color11" "#FFFF55" ;;
+    #blue
+    color4)         xrdb_get "color4" "#0000AA" ;;
+    color12)        xrdb_get "color12" "#5555FF" ;;
+    #magenta
+    color5)         xrdb_get "color5" "#AA00AA" ;;
+    color13)        xrdb_get "color13" "#FF55FF" ;;
+    #cyan
+    color6)         xrdb_get "color6" "#00AAAA" ;;
+    color14)        xrdb_get "color14" "#55FFFF" ;;
+    #white
+    color7)         xrdb_get "color7" "#AAAAAA" ;;
+    color15)        xrdb_get "color15" "#FFFFFF" ;;
+    *)              xrdb_get "$1" ;;
+esac
+
+# vim: set ts=4 sw=4 tw=0 et :

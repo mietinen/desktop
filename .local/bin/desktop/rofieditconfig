@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+. "${XDG_CONFIG_HOME:-$HOME/.config}/shell/bookmarks" 2>/dev/null
+chosen="$(echo "$bm_files" | rofirun -dmenu -p 'Edit file: ')"
+eval file="$chosen"
+[ -r "$file" ] && setsid "$TERMINAL" -e sensible-editor "$file"
+
