@@ -254,12 +254,12 @@ globalkeys = gears.table.join(
 
     awful.key({ "Shift" }, "Print",
         function () awful.spawn("scrot -sfe 'scrotmv $f'") end,
-        {description = "Screenshot, selected area", group = "XF86 keys"}
+        {description = "Screenshot selected area", group = "XF86 keys"}
     ),
 
     awful.key({ "Mod1" }, "Print",
         function () awful.spawn("scrot -ue 'scrotmv $f'") end,
-        {description = "Screenshot", group = "XF86 keys"}
+        {description = "Screenshot focused window", group = "XF86 keys"}
     ),
 
     awful.key({ modkey }, "s",
